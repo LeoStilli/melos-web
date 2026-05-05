@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { ReviewCard } from '@/components/content/ReviewCard'
-import { ListPreview } from '@/components/content/ListPreview'
+import { ReviewCard } from '@/components/cards/ReviewCard'
+import { ListPreview } from '@/components/cards/ListPreview'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
 import { getUserByUsername, getUser } from '@/lib/mock/users'

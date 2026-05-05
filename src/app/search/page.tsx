@@ -1,16 +1,14 @@
-import Link from 'next/link'
-
 import { TopNav } from '@/components/nav/TopNav'
 import { SearchBar } from '@/components/ui/SearchBar'
-import { AlbumRow } from '@/components/content/AlbumRow'
-import { UserRow } from '@/components/content/UserRow'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { AlbumCover } from '@/components/ui/AlbumCover'
+import { AlbumRow } from '@/components/cards/AlbumRow'
+import { ArtistRow } from '@/components/cards/ArtistRow'
+import { TrackRow } from '@/components/cards/TrackRow'
+import { UserRow } from '@/components/cards/UserRow'
 
 import { albums, getAlbumTracks } from '@/lib/mock/albums'
 import { artists } from '@/lib/mock/artists'
 import { users, isFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
-import { formatDuration } from '@/lib/utils'
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>
@@ -21,15 +19,6 @@ export default async function SearchPage({ searchParams }: PageProps) {
   const query = (q ?? '').trim().toLowerCase()
   const hasQuery = query.length > 0
 
-  const matchingAlbums = hasQuery
-    ? albums.filter(
-        (a) =>
-          a.title.toLowerCase().includes(query) ||
-          a.artistName.toLowerCase().includes(query) ||
-          a.genres.some((g) => g.toLowerCase().includes(query))
-      )
-    : albums.slice(0, 6)
-
   const matchingArtists = hasQuery
     ? artists.filter(
         (a) =>
@@ -39,15 +28,25 @@ export default async function SearchPage({ searchParams }: PageProps) {
       )
     : []
 
+  const matchingAlbums = hasQuery
+    ? albums.filter(
+        (a) =>
+          a.title.toLowerCase().includes(query) ||
+          a.artistName.toLowerCase().includes(query) ||
+          a.genres.some((g) => g.toLowerCase().includes(query))
+      )
+    : []
+
   const matchingTracks = hasQuery
     ? albums
-        .flatMap((album) => getAlbumTracks(album.id).map((t) => ({ ...t, album })))
+        .flatMap((album) => getAlbumTracks(album.id).map((t) => ({ track: t, album })))
         .filter(
-          (t) =>
-            t.title.toLowerCase().includes(query) ||
-            t.album.artistName.toLowerCase().includes(query)
+          ({ track, album }) =>
+            track.title.toLowerCase().includes(query) ||
+            album.artistName.toLowerCase().includes(query) ||
+            album.title.toLowerCase().includes(query)
         )
-        .slice(0, 12)
+        .slice(0, 20)
     : []
 
   const matchingUsers = hasQuery
@@ -56,121 +55,142 @@ export default async function SearchPage({ searchParams }: PageProps) {
           u.username.toLowerCase().includes(query) ||
           u.displayName.toLowerCase().includes(query)
       )
-    : users.slice(0, 5)
+    : []
 
-  const totalResults = matchingAlbums.length + matchingArtists.length + matchingTracks.length + matchingUsers.length
+  const total = matchingArtists.length + matchingAlbums.length + matchingTracks.length + matchingUsers.length
 
   return (
     <div className='min-h-screen bg-ink'>
       <TopNav active='search' />
 
-      <header className='px-6 md:px-12 py-12 border-b border-border'>
+      <header className='px-6 md:px-12 py-12 md:py-14 border-b border-border'>
         <p className='font-sans text-[0.65rem] tracking-[0.3em] uppercase text-rust mb-4'>
-          {hasQuery ? `${totalResults} ${totalResults === 1 ? 'RESULT' : 'RESULTS'}` : 'SEARCH'}
+          {hasQuery ? `${total} ${total === 1 ? 'RESULT' : 'RESULTS'}` : 'SEARCH'}
         </p>
-        {hasQuery ? (
-          <h1 className='font-serif font-black text-cream leading-[0.92] tracking-tight mb-8 text-[clamp(2rem,5vw,3.5rem)]'>
-            "{q}"
-          </h1>
-        ) : (
-          <h1 className='font-serif font-black text-cream leading-[0.92] tracking-tight mb-8 text-[clamp(2rem,5vw,3.5rem)]'>
-            FIND ANYTHING.
-          </h1>
-        )}
+
+        <h1 className='font-serif font-black text-cream leading-[0.92] tracking-tight mb-8 text-[clamp(2rem,5vw,3.5rem)]'>
+          {hasQuery ? `"${q}"` : 'FIND ANYTHING.'}
+        </h1>
+
         <SearchBar defaultValue={q} size='lg' className='max-w-3xl' />
+
+        {hasQuery && (
+          <div className='flex flex-wrap items-center gap-x-6 gap-y-2 mt-8 font-sans text-[0.65rem] tracking-[0.25em] uppercase'>
+            <CountChip label='ARTISTS' count={matchingArtists.length} anchor='artists' />
+            <CountChip label='ALBUMS' count={matchingAlbums.length} anchor='albums' />
+            <CountChip label='SONGS' count={matchingTracks.length} anchor='songs' />
+            <CountChip label='LISTENERS' count={matchingUsers.length} anchor='listeners' />
+          </div>
+        )}
       </header>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-0'>
-        <section className='px-6 md:px-12 py-12 lg:border-r lg:border-border'>
-          <SectionHeading label={hasQuery ? `ALBUMS (${matchingAlbums.length})` : 'POPULAR ALBUMS'} />
-          {matchingAlbums.length === 0 ? (
-            <Empty label={`NO ALBUMS MATCH "${q}"`} />
-          ) : (
-            <ol>
-              {matchingAlbums.slice(0, 10).map((album) => (
-                <AlbumRow key={album.id} album={album} />
-              ))}
-            </ol>
+      {!hasQuery ? (
+        <EmptyState />
+      ) : total === 0 ? (
+        <NoResults query={q ?? ''} />
+      ) : (
+        <div className='px-6 md:px-12 py-12 max-w-5xl space-y-16'>
+          {matchingArtists.length > 0 && (
+            <section id='artists'>
+              <SectionHeading label={`ARTISTS  ·  ${matchingArtists.length}`} />
+              <ol>
+                {matchingArtists.map((artist) => (
+                  <ArtistRow key={artist.id} artist={artist} />
+                ))}
+              </ol>
+            </section>
           )}
 
-          {matchingArtists.length > 0 && (
-            <div className='mt-14'>
-              <SectionHeading label={`ARTISTS (${matchingArtists.length})`} />
-              <ul>
-                {matchingArtists.map((artist) => (
-                  <li key={artist.id} className='py-4 border-b border-border'>
-                    <Link
-                      href={`/artist/${artist.slug}`}
-                      className='font-serif font-bold text-cream uppercase tracking-wide hover:text-rust transition-colors duration-150 text-[clamp(1rem,1.6vw,1.2rem)]'
-                    >
-                      {artist.name}
-                    </Link>
-                    <p className='font-sans text-[0.65rem] tracking-[0.2em] uppercase text-cream-dim mt-1'>
-                      {artist.genres.slice(0, 3).join('  ·  ')}
-                      {artist.origin && ` · ${artist.origin.toUpperCase()}`}
-                    </p>
-                  </li>
+          {matchingAlbums.length > 0 && (
+            <section id='albums'>
+              <SectionHeading label={`ALBUMS  ·  ${matchingAlbums.length}`} />
+              <ol>
+                {matchingAlbums.map((album) => (
+                  <AlbumRow key={album.id} album={album} />
                 ))}
-              </ul>
-            </div>
+              </ol>
+            </section>
           )}
 
           {matchingTracks.length > 0 && (
-            <div className='mt-14'>
-              <SectionHeading label={`SONGS (${matchingTracks.length})`} />
+            <section id='songs'>
+              <SectionHeading label={`SONGS  ·  ${matchingTracks.length}`} />
               <ol>
-                {matchingTracks.map((track) => (
-                  <li key={track.id} className='flex items-center gap-4 py-3 border-b border-border group'>
-                    <Link href={`/album/${track.album.slug}`} className='flex-shrink-0'>
-                      <AlbumCover title={track.album.title} size='sm' />
-                    </Link>
-                    <div className='flex-1 min-w-0'>
-                      <Link
-                        href={`/album/${track.album.slug}`}
-                        className='block font-serif text-cream truncate group-hover:text-rust transition-colors duration-150 text-[0.95rem] leading-tight'
-                      >
-                        {track.title}
-                      </Link>
-                      <p className='font-sans text-cream-dim mt-0.5 truncate text-[0.65rem] tracking-[0.15em] uppercase'>
-                        {track.album.artistName}
-                      </p>
-                    </div>
-                    <span className='font-sans tabular-nums text-cream-dim flex-shrink-0 text-[0.7rem]'>
-                      {formatDuration(track.durationMs)}
-                    </span>
-                  </li>
+                {matchingTracks.map(({ track, album }) => (
+                  <TrackRow key={track.id} track={track} album={album} />
                 ))}
               </ol>
-            </div>
+            </section>
           )}
-        </section>
 
-        <section className='px-6 md:px-12 py-12'>
-          <SectionHeading label={hasQuery ? `LISTENERS (${matchingUsers.length})` : 'NOTABLE LISTENERS'} />
-          {matchingUsers.length === 0 ? (
-            <Empty label={`NO LISTENERS MATCH "${q}"`} />
-          ) : (
-            <div>
-              {matchingUsers.map((u) => (
-                <UserRow
-                  key={u.id}
-                  user={u}
-                  showFollowButton={u.id !== CURRENT_USER_ID}
-                  isFollowing={isFollowing(CURRENT_USER_ID, u.id)}
-                />
-              ))}
-            </div>
+          {matchingUsers.length > 0 && (
+            <section id='listeners'>
+              <SectionHeading label={`LISTENERS  ·  ${matchingUsers.length}`} />
+              <div>
+                {matchingUsers.map((u) => (
+                  <UserRow
+                    key={u.id}
+                    user={u}
+                    showFollowButton={u.id !== CURRENT_USER_ID}
+                    isFollowing={isFollowing(CURRENT_USER_ID, u.id)}
+                  />
+                ))}
+              </div>
+            </section>
           )}
-        </section>
+        </div>
+      )}
+    </div>
+  )
+}
+
+interface CountChipProps {
+  label: string
+  count: number
+  anchor: string
+}
+
+function CountChip({ label, count, anchor }: CountChipProps) {
+  if (count === 0) {
+    return (
+      <span className='text-cream-dim/40'>
+        {label} <span className='font-serif font-black tabular-nums ml-1'>0</span>
+      </span>
+    )
+  }
+  return (
+    <a href={`#${anchor}`} className='text-cream-dim hover:text-rust transition-colors duration-150'>
+      {label} <span className='font-serif font-black tabular-nums text-cream ml-1'>{count}</span>
+    </a>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className='px-6 md:px-12 py-16 max-w-3xl'>
+      <p className='font-serif italic text-cream-dim leading-relaxed text-[clamp(1rem,1.5vw,1.2rem)]'>
+        Type a name, a genre, a track. We'll search across artists, albums, songs, and listeners.
+      </p>
+      <div className='mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-4 font-sans text-[0.65rem] tracking-[0.25em] uppercase text-cream-dim'>
+        {['Frank Ocean', 'art pop', 'Paranoid', 'Radiohead'].map((q) => (
+          <a key={q} href={`/search?q=${encodeURIComponent(q)}`} className='hover:text-rust transition-colors duration-150'>
+            → {q}
+          </a>
+        ))}
       </div>
     </div>
   )
 }
 
-function Empty({ label }: { label: string }) {
+function NoResults({ query }: { query: string }) {
   return (
-    <p className='font-sans text-xs tracking-[0.2em] uppercase text-cream-dim py-8'>
-      {label}
-    </p>
+    <div className='px-6 md:px-12 py-16'>
+      <p className='font-sans text-xs tracking-[0.25em] uppercase text-cream-dim'>
+        NOTHING MATCHES "{query}".
+      </p>
+      <p className='font-serif italic text-cream-dim mt-4 text-[clamp(0.95rem,1.4vw,1.1rem)] max-w-xl'>
+        Try a broader query — an artist name, a genre, or a single track title.
+      </p>
+    </div>
   )
 }

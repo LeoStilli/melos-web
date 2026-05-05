@@ -2,8 +2,8 @@ import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { AlbumCover } from '@/components/ui/AlbumCover'
-import { formatRelative, formatScore } from '@/lib/utils'
-import type { ReviewWithContext } from '@/lib/types'
+import { formatRelative, formatScore } from '@/lib/utils/format'
+import type { ReviewWithContext } from '@/lib/types/review'
 
 interface ReviewCardProps {
   review: ReviewWithContext

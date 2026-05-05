@@ -1,4 +1,4 @@
-import type { CuratedList, ListItem } from '@/lib/types'
+import type { CuratedList, ListItem } from '@/lib/types/list'
 
 export const lists: CuratedList[] = [
   {

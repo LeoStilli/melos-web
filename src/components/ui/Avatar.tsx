@@ -1,4 +1,5 @@
-import { cn, avatarColor } from '@/lib/utils'
+import { cn } from '@/lib/utils/cn'
+import { avatarColor } from '@/lib/utils/colors'
 
 interface AvatarProps {
   name: string

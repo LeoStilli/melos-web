@@ -2,8 +2,9 @@ import Link from 'next/link'
 
 import { AlbumCover } from '@/components/ui/AlbumCover'
 import { Score } from '@/components/ui/Score'
-import { formatLongDuration } from '@/lib/utils'
-import type { Album, Artist } from '@/lib/types'
+import { formatLongDuration } from '@/lib/utils/format'
+import type { Album } from '@/lib/types/album'
+import type { Artist } from '@/lib/types/artist'
 
 interface AlbumMastheadProps {
   album: Album

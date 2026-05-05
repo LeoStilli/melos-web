@@ -1,4 +1,5 @@
-import { cn, formatScore } from '@/lib/utils'
+import { cn } from '@/lib/utils/cn'
+import { formatScore } from '@/lib/utils/format'
 
 interface ScoreProps {
   value: number

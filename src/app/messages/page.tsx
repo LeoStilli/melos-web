@@ -9,7 +9,8 @@ import {
   getOtherParticipantId
 } from '@/lib/mock/messages'
 import { getUser, CURRENT_USER_ID } from '@/lib/mock/users'
-import { formatRelative, cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/cn'
+import { formatRelative } from '@/lib/utils/format'
 
 export default function MessagesInboxPage() {
   const conversations = getConversationsForUser(CURRENT_USER_ID)

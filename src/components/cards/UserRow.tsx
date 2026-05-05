@@ -1,7 +1,7 @@
 import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
-import type { User } from '@/lib/types'
+import type { User } from '@/lib/types/user'
 
 interface UserRowProps {
   user: User

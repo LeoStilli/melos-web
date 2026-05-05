@@ -1,5 +1,5 @@
 import { TopNav } from '@/components/nav/TopNav'
-import { ListPreview } from '@/components/content/ListPreview'
+import { ListPreview } from '@/components/cards/ListPreview'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
 import { lists } from '@/lib/mock/lists'

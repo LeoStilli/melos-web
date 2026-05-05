@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Avatar } from '@/components/ui/Avatar'
 import { getUser, CURRENT_USER_ID } from '@/lib/mock/users'
 import { getConversationsForUser } from '@/lib/mock/messages'
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils/cn'
 
 interface TopNavProps {
   active?: 'home' | 'discover' | 'lists' | 'search' | 'messages' | 'profile' | null

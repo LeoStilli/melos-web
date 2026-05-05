@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
 import { isFollowing as checkFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
-import type { User } from '@/lib/types'
+import type { User } from '@/lib/types/user'
 
 interface ProfileMastheadProps {
   user: User

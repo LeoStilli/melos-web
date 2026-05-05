@@ -1,4 +1,4 @@
-import type { Conversation, Message } from '@/lib/types'
+import type { Conversation, Message } from '@/lib/types/message'
 
 export const messages: Message[] = [
   {

@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { UserRow } from '@/components/content/UserRow'
+import { UserRow } from '@/components/cards/UserRow'
 
 import { getUserByUsername, getFollowing, isFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
 

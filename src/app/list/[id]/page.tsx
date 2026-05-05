@@ -8,7 +8,7 @@ import { AlbumCover } from '@/components/ui/AlbumCover'
 import { getList, getListItems } from '@/lib/mock/lists'
 import { getUser } from '@/lib/mock/users'
 import { getAlbum } from '@/lib/mock/albums'
-import { formatRank } from '@/lib/utils'
+import { formatRank } from '@/lib/utils/format'
 
 interface PageProps {
   params: Promise<{ id: string }>

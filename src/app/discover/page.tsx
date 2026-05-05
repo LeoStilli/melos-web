@@ -1,6 +1,6 @@
 import { TopNav } from '@/components/nav/TopNav'
-import { AlbumRow } from '@/components/content/AlbumRow'
-import { ReviewCard } from '@/components/content/ReviewCard'
+import { AlbumRow } from '@/components/cards/AlbumRow'
+import { ReviewCard } from '@/components/cards/ReviewCard'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
 import { albums } from '@/lib/mock/albums'

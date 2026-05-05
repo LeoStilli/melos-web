@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { AlbumCover } from '@/components/ui/AlbumCover'
 import { albums, getAlbumTracks } from '@/lib/mock/albums'
-import { formatRank, formatDuration, formatScore } from '@/lib/utils'
+import { formatRank, formatDuration, formatScore } from '@/lib/utils/format'
 
 export function TopTracks() {
   const tracks = albums

@@ -1,4 +1,4 @@
-import { ActivityRow } from '@/components/content/ActivityItem'
+import { ActivityCard } from '@/components/cards/ActivityCard'
 import { getRecentActivity } from '@/lib/mock/activity'
 import { getUser } from '@/lib/mock/users'
 import { getReview } from '@/lib/mock/reviews'
@@ -15,7 +15,7 @@ export function HomeFeed() {
         if (!user) return null
 
         return (
-          <ActivityRow
+          <ActivityCard
             key={item.id}
             item={item}
             user={user}

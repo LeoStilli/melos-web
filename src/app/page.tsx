@@ -1,9 +1,9 @@
 import { TopNav } from '@/components/nav/TopNav'
 import { SearchBar } from '@/components/ui/SearchBar'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { AlbumRow } from '@/components/content/AlbumRow'
-import { UserRow } from '@/components/content/UserRow'
-import { ListPreview } from '@/components/content/ListPreview'
+import { AlbumRow } from '@/components/cards/AlbumRow'
+import { UserRow } from '@/components/cards/UserRow'
+import { ListPreview } from '@/components/cards/ListPreview'
 
 import { albums } from '@/lib/mock/albums'
 import { artists } from '@/lib/mock/artists'
@@ -53,7 +53,7 @@ export default function HomePage() {
         <SearchBar size='hero' className='max-w-3xl' />
         <div className='flex flex-wrap items-center gap-x-3 gap-y-2 mt-6 font-sans text-[0.65rem] tracking-[0.25em] uppercase text-cream-dim'>
           <span>TRY:</span>
-          {['shoegaze', 'frank ocean', 'art pop', 'phoebe'].map((q) => (
+          {['frank ocean', 'art pop', 'paranoid', 'radiohead', 'indie folk'].map((q) => (
             <a
               key={q}
               href={`/search?q=${encodeURIComponent(q)}`}

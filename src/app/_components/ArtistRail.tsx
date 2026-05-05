@@ -1,7 +1,8 @@
 import Link from 'next/link'
 
-import { cn, avatarColor } from '@/lib/utils'
-import type { Artist } from '@/lib/types'
+import { cn } from '@/lib/utils/cn'
+import { avatarColor } from '@/lib/utils/colors'
+import type { Artist } from '@/lib/types/artist'
 
 interface ArtistRailProps {
   artists: Artist[]

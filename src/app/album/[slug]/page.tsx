@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { ReviewCard } from '@/components/content/ReviewCard'
+import { ReviewCard } from '@/components/cards/ReviewCard'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
 import { getAlbumBySlug, getAlbumTracks } from '@/lib/mock/albums'

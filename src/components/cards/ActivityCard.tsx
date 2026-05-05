@@ -1,10 +1,14 @@
 import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
-import { formatRelative, formatScore } from '@/lib/utils'
-import type { ActivityItem, User, Album, CuratedList, Review } from '@/lib/types'
+import { formatRelative, formatScore } from '@/lib/utils/format'
+import type { ActivityItem } from '@/lib/types/activity'
+import type { User } from '@/lib/types/user'
+import type { Album } from '@/lib/types/album'
+import type { CuratedList } from '@/lib/types/list'
+import type { Review } from '@/lib/types/review'
 
-interface ActivityItemProps {
+interface ActivityCardProps {
   item: ActivityItem
   user: User
   review?: Review
@@ -13,7 +17,7 @@ interface ActivityItemProps {
   targetUser?: User
 }
 
-export function ActivityRow({ item, user, review, album, list, targetUser }: ActivityItemProps) {
+export function ActivityCard({ item, user, review, album, list, targetUser }: ActivityCardProps) {
   return (
     <li className='flex items-start gap-4 py-5 border-b border-border'>
       <Link href={`/u/${user.username}`} className='flex-shrink-0 mt-0.5'>
@@ -26,7 +30,7 @@ export function ActivityRow({ item, user, review, album, list, targetUser }: Act
             @{user.username}
           </Link>
           {user.isVerified && <span className='text-rust ml-1.5'>✓</span>}
-          <span className='text-cream-dim'>{' '}{describe(item, !!review, !!album, !!list, !!targetUser)}</span>
+          <span className='text-cream-dim'>{' '}{describe(item.type)}</span>
           {album && (
             <Link href={`/album/${album.slug}`} className='ml-1 font-serif font-bold uppercase tracking-wide text-cream hover:text-rust transition-colors duration-150'>
               {album.title}
@@ -63,8 +67,8 @@ export function ActivityRow({ item, user, review, album, list, targetUser }: Act
   )
 }
 
-function describe(item: ActivityItem, hasReview: boolean, hasAlbum: boolean, hasList: boolean, hasTarget: boolean): string {
-  switch (item.type) {
+function describe(type: ActivityItem['type']): string {
+  switch (type) {
     case 'review_posted':
       return ' reviewed'
     case 'rating_added':

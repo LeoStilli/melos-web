@@ -1,7 +1,8 @@
 import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
-import type { CuratedList, User } from '@/lib/types'
+import type { CuratedList } from '@/lib/types/list'
+import type { User } from '@/lib/types/user'
 
 interface ListPreviewProps {
   list: CuratedList

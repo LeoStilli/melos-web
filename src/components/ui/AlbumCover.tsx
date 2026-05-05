@@ -1,4 +1,5 @@
-import { cn, coverColor } from '@/lib/utils'
+import { cn } from '@/lib/utils/cn'
+import { coverColor } from '@/lib/utils/colors'
 
 interface AlbumCoverProps {
   title: string

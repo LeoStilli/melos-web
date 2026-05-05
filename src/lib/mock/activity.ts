@@ -1,4 +1,4 @@
-import type { ActivityItem } from '@/lib/types'
+import type { ActivityItem } from '@/lib/types/activity'
 
 export const activity: ActivityItem[] = [
   {

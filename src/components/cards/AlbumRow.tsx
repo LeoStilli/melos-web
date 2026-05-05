@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 import { AlbumCover } from '@/components/ui/AlbumCover'
-import { formatRank, formatScore } from '@/lib/utils'
-import type { Album } from '@/lib/types'
+import { formatRank, formatScore } from '@/lib/utils/format'
+import type { Album } from '@/lib/types/album'
 
 interface AlbumRowProps {
   album: Album

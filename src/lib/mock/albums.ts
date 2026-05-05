@@ -1,4 +1,4 @@
-import type { Album, Track } from '@/lib/types'
+import type { Album, Track } from '@/lib/types/album'
 
 export const albums: Album[] = [
   {

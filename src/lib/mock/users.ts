@@ -1,4 +1,4 @@
-import type { User, Follow } from '@/lib/types'
+import type { User, Follow } from '@/lib/types/user'
 
 export const users: User[] = [
   {

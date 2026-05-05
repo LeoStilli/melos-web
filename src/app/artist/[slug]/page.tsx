@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { AlbumRow } from '@/components/content/AlbumRow'
+import { AlbumRow } from '@/components/cards/AlbumRow'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Avatar } from '@/components/ui/Avatar'
 

@@ -1,5 +1,5 @@
-import { formatRank, formatDuration, formatScore } from '@/lib/utils'
-import type { Track } from '@/lib/types'
+import { formatRank, formatDuration, formatScore } from '@/lib/utils/format'
+import type { Track } from '@/lib/types/album'
 
 interface TracklistProps {
   tracks: Track[]

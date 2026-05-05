@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { ListPreview } from '@/components/content/ListPreview'
+import { ListPreview } from '@/components/cards/ListPreview'
 
 import { getUserByUsername } from '@/lib/mock/users'
 import { getListsByUser } from '@/lib/mock/lists'

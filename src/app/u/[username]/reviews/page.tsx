@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 
 import { TopNav } from '@/components/nav/TopNav'
-import { ReviewCard } from '@/components/content/ReviewCard'
+import { ReviewCard } from '@/components/cards/ReviewCard'
 
 import { getUserByUsername } from '@/lib/mock/users'
 import { getReviewsByUser, withContext } from '@/lib/mock/reviews'

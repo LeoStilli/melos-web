@@ -1,4 +1,4 @@
-import type { Review, ReviewWithContext } from '@/lib/types'
+import type { Review, ReviewWithContext } from '@/lib/types/review'
 import { getUser } from './users'
 import { getAlbum } from './albums'
 
