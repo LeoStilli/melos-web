@@ -9,7 +9,8 @@ import {
   getConversationMessages,
   getOtherParticipantId
 } from '@/lib/mock/messages'
-import { getUser, CURRENT_USER_ID } from '@/lib/mock/users'
+import { getUser } from '@/lib/mock/users'
+import { requireCurrentUser } from '@/lib/auth/current-user'
 import { cn } from '@/lib/utils/cn'
 import { formatRelative } from '@/lib/utils/format'
 
@@ -18,11 +19,12 @@ interface PageProps {
 }
 
 export default async function ConversationPage({ params }: PageProps) {
+  const me = await requireCurrentUser()
   const { id } = await params
   const conversation = getConversation(id)
-  if (!conversation || !conversation.participantIds.includes(CURRENT_USER_ID)) notFound()
+  if (!conversation || !conversation.participantIds.includes(me.id)) notFound()
 
-  const otherId = getOtherParticipantId(conversation, CURRENT_USER_ID)
+  const otherId = getOtherParticipantId(conversation, me.id)
   const other = getUser(otherId)
   if (!other) notFound()
 
@@ -59,7 +61,7 @@ export default async function ConversationPage({ params }: PageProps) {
       <section className='flex-1 px-6 md:px-12 py-10 max-w-3xl w-full'>
         <ol className='flex flex-col gap-8'>
           {conversationMessages.map((m) => {
-            const isFromMe = m.senderId === CURRENT_USER_ID
+            const isFromMe = m.senderId === me.id
             const sender = isFromMe ? null : other
 
             return (

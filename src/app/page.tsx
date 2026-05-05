@@ -7,15 +7,17 @@ import { ListPreview } from '@/components/cards/ListPreview'
 
 import { albums } from '@/lib/mock/albums'
 import { artists } from '@/lib/mock/artists'
-import { users, isFollowing, CURRENT_USER_ID, getUser } from '@/lib/mock/users'
+import { users, isFollowing, getUser } from '@/lib/mock/users'
 import { getRecentLists } from '@/lib/mock/lists'
+import { requireCurrentUser } from '@/lib/auth/current-user'
 
 import { GenreGrid } from './_components/GenreGrid'
 import { ArtistRail } from './_components/ArtistRail'
 import { TopTracks } from './_components/TopTracks'
 import { HomeFeed } from './_components/HomeFeed'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const me = await requireCurrentUser()
   const genreCounts = new Map<string, number>()
   for (const album of albums) {
     for (const g of album.genres) {
@@ -34,7 +36,7 @@ export default function HomePage() {
   const featuredArtists = artists.slice(0, 6)
 
   const peopleToFollow = users
-    .filter((u) => u.id !== CURRENT_USER_ID && !isFollowing(CURRENT_USER_ID, u.id))
+    .filter((u) => u.id !== me.id && !isFollowing(me.id, u.id))
     .slice(0, 4)
 
   const featuredLists = getRecentLists(3)
@@ -109,7 +111,7 @@ export default function HomePage() {
                 key={u.id}
                 user={u}
                 showFollowButton
-                isFollowing={isFollowing(CURRENT_USER_ID, u.id)}
+                isFollowing={isFollowing(me.id, u.id)}
               />
             ))}
           </div>

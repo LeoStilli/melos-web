@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation'
 import { TopNav } from '@/components/nav/TopNav'
 import { UserRow } from '@/components/cards/UserRow'
 
-import { getUserByUsername, getFollowers, isFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
+import { getUserByUsername, getFollowers, isFollowing } from '@/lib/mock/users'
+import { requireCurrentUser } from '@/lib/auth/current-user'
 
 import { ProfileMasthead } from '../_components/ProfileMasthead'
 import { ProfileTabs } from '../_components/ProfileTabs'
@@ -13,6 +14,7 @@ interface PageProps {
 }
 
 export default async function FollowersPage({ params }: PageProps) {
+  const me = await requireCurrentUser()
   const { username } = await params
   const user = getUserByUsername(username)
   if (!user) notFound()
@@ -40,8 +42,8 @@ export default async function FollowersPage({ params }: PageProps) {
               <UserRow
                 key={u.id}
                 user={u}
-                showFollowButton={u.id !== CURRENT_USER_ID}
-                isFollowing={isFollowing(CURRENT_USER_ID, u.id)}
+                showFollowButton={u.id !== me.id}
+                isFollowing={isFollowing(me.id, u.id)}
               />
             ))}
           </div>

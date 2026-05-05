@@ -1,16 +1,18 @@
 import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
-import { isFollowing as checkFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
+import { isFollowing as checkFollowing } from '@/lib/mock/users'
+import { getCurrentUser } from '@/lib/auth/current-user'
 import type { User } from '@/lib/types/user'
 
 interface ProfileMastheadProps {
   user: User
 }
 
-export function ProfileMasthead({ user }: ProfileMastheadProps) {
-  const isMe = user.id === CURRENT_USER_ID
-  const following = !isMe && checkFollowing(CURRENT_USER_ID, user.id)
+export async function ProfileMasthead({ user }: ProfileMastheadProps) {
+  const me = await getCurrentUser()
+  const isMe = me?.id === user.id
+  const following = me && !isMe ? checkFollowing(me.id, user.id) : false
   const joinYear = user.joinedAt.getFullYear()
 
   return (

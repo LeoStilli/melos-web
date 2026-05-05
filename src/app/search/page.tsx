@@ -8,13 +8,15 @@ import { UserRow } from '@/components/cards/UserRow'
 
 import { albums, getAlbumTracks } from '@/lib/mock/albums'
 import { artists } from '@/lib/mock/artists'
-import { users, isFollowing, CURRENT_USER_ID } from '@/lib/mock/users'
+import { users, isFollowing } from '@/lib/mock/users'
+import { requireCurrentUser } from '@/lib/auth/current-user'
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
+  const me = await requireCurrentUser()
   const { q } = await searchParams
   const query = (q ?? '').trim().toLowerCase()
   const hasQuery = query.length > 0
@@ -131,8 +133,8 @@ export default async function SearchPage({ searchParams }: PageProps) {
                   <UserRow
                     key={u.id}
                     user={u}
-                    showFollowButton={u.id !== CURRENT_USER_ID}
-                    isFollowing={isFollowing(CURRENT_USER_ID, u.id)}
+                    showFollowButton={u.id !== me.id}
+                    isFollowing={isFollowing(me.id, u.id)}
                   />
                 ))}
               </div>

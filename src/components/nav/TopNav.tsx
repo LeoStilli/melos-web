@@ -1,7 +1,8 @@
 import Link from 'next/link'
 
 import { Avatar } from '@/components/ui/Avatar'
-import { getUser, CURRENT_USER_ID } from '@/lib/mock/users'
+import { getCurrentUser } from '@/lib/auth/current-user'
+import { signOutAction } from '@/lib/actions/auth'
 import { getConversationsForUser } from '@/lib/mock/messages'
 import { cn } from '@/lib/utils/cn'
 
@@ -9,9 +10,9 @@ interface TopNavProps {
   active?: 'home' | 'discover' | 'lists' | 'search' | 'messages' | 'profile' | null
 }
 
-export function TopNav({ active = null }: TopNavProps) {
-  const me = getUser(CURRENT_USER_ID)
-  const conversations = getConversationsForUser(CURRENT_USER_ID)
+export async function TopNav({ active = null }: TopNavProps) {
+  const me = await getCurrentUser()
+  const conversations = me ? getConversationsForUser(me.id) : []
   const unread = conversations.reduce((acc, c) => acc + c.unreadCount, 0)
 
   return (
@@ -57,9 +58,22 @@ export function TopNav({ active = null }: TopNavProps) {
           )}
         </Link>
 
+        <form action={signOutAction}>
+          <button
+            type='submit'
+            className='font-sans text-[0.65rem] tracking-[0.3em] uppercase text-cream-dim hover:text-rust transition-colors duration-150 cursor-pointer'
+          >
+            SIGN OUT
+          </button>
+        </form>
+
         {me && (
           <Link href={`/u/${me.username}`} className='flex items-center'>
-            <Avatar name={me.displayName} size='sm' className={active === 'profile' ? 'ring-2 ring-rust ring-offset-2 ring-offset-ink' : ''} />
+            <Avatar
+              name={me.displayName}
+              size='sm'
+              className={active === 'profile' ? 'ring-2 ring-rust ring-offset-2 ring-offset-ink' : ''}
+            />
           </Link>
         )}
       </div>

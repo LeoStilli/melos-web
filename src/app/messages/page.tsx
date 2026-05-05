@@ -8,12 +8,14 @@ import {
   getMessage,
   getOtherParticipantId
 } from '@/lib/mock/messages'
-import { getUser, CURRENT_USER_ID } from '@/lib/mock/users'
+import { getUser } from '@/lib/mock/users'
+import { requireCurrentUser } from '@/lib/auth/current-user'
 import { cn } from '@/lib/utils/cn'
 import { formatRelative } from '@/lib/utils/format'
 
-export default function MessagesInboxPage() {
-  const conversations = getConversationsForUser(CURRENT_USER_ID)
+export default async function MessagesInboxPage() {
+  const me = await requireCurrentUser()
+  const conversations = getConversationsForUser(me.id)
 
   return (
     <div className='min-h-screen bg-ink'>
@@ -45,12 +47,12 @@ export default function MessagesInboxPage() {
         ) : (
           <ul>
             {conversations.map((c) => {
-              const otherId = getOtherParticipantId(c, CURRENT_USER_ID)
+              const otherId = getOtherParticipantId(c, me.id)
               const other = getUser(otherId)
               const last = getMessage(c.lastMessageId)
               if (!other || !last) return null
 
-              const isFromMe = last.senderId === CURRENT_USER_ID
+              const isFromMe = last.senderId === me.id
 
               return (
                 <li key={c.id} className='border-b border-border'>

@@ -107,7 +107,9 @@ export const users: User[] = [
   }
 ]
 
-export const CURRENT_USER_ID = 'u_leo'
+export function addUser(user: User): void {
+  users.push(user)
+}
 
 export const follows: Follow[] = [
   { followerId: 'u_leo', followingId: 'u_maya', createdAt: new Date('2025-09-10') },
