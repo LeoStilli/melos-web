@@ -1,7 +1,5 @@
 import { TopNav } from '@/components/nav/TopNav'
-import { SearchBar } from '@/components/ui/SearchBar'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { AlbumRow } from '@/components/cards/AlbumRow'
 import { UserRow } from '@/components/cards/UserRow'
 import { ListPreview } from '@/components/cards/ListPreview'
 
@@ -11,10 +9,15 @@ import { users, isFollowing, getUser } from '@/lib/mock/users'
 import { getRecentLists } from '@/lib/mock/lists'
 import { requireCurrentUser } from '@/lib/auth/current-user'
 
+import { Hero } from './_components/Hero'
 import { GenreGrid } from './_components/GenreGrid'
 import { ArtistRail } from './_components/ArtistRail'
 import { TopTracks } from './_components/TopTracks'
 import { HomeFeed } from './_components/HomeFeed'
+import { MarqueeStrip } from './_components/MarqueeStrip'
+import { RevealSection } from './_components/RevealSection'
+import { TrendingAlbums } from './_components/TrendingAlbums'
+import { Footer } from './_components/Footer'
 
 export default async function HomePage() {
   const me = await requireCurrentUser()
@@ -41,58 +44,44 @@ export default async function HomePage() {
 
   const featuredLists = getRecentLists(3)
 
+  const marqueeArtists = artists.slice(0, 12).map((a) => a.name)
+
   return (
-    <div className='min-h-screen bg-ink'>
+    <div className='min-h-screen bg-ink relative'>
       <TopNav active='home' />
 
-      <section className='border-b border-border px-6 md:px-12 py-14 md:py-20'>
-        <p className='font-sans text-rust tracking-[0.3em] uppercase text-xs mb-6'>
-          BROWSE THE LIBRARY
-        </p>
-        <h1 className='font-serif font-black text-cream leading-[0.92] tracking-tight mb-10 text-[clamp(2.5rem,7vw,5.5rem)]'>
-          FIND SOMETHING<br />WORTH HEARING.
-        </h1>
-        <SearchBar size='hero' className='max-w-3xl' />
-        <div className='flex flex-wrap items-center gap-x-3 gap-y-2 mt-6 font-sans text-[0.65rem] tracking-[0.25em] uppercase text-cream-dim'>
-          <span>TRY:</span>
-          {['frank ocean', 'art pop', 'paranoid', 'radiohead', 'indie folk'].map((q) => (
-            <a
-              key={q}
-              href={`/search?q=${encodeURIComponent(q)}`}
-              className='hover:text-rust transition-colors duration-150 underline-offset-4 hover:underline'
-            >
-              {q}
-            </a>
-          ))}
-        </div>
-      </section>
+      <Hero />
 
-      <section className='border-b border-border px-6 md:px-12 py-14'>
+      <MarqueeStrip items={marqueeArtists} variant='serif' direction='left' />
+
+      <RevealSection>
         <SectionHeading label='BROWSE BY GENRE' />
         <GenreGrid genres={genres} />
-      </section>
+      </RevealSection>
 
-      <section className='border-b border-border px-6 md:px-12 py-14'>
+      <RevealSection>
         <SectionHeading label='TRENDING ALBUMS' href='/discover' />
-        <ol className='grid grid-cols-1 lg:grid-cols-2 gap-x-14'>
-          {trendingAlbums.map((album, i) => (
-            <AlbumRow key={album.id} album={album} rank={i + 1} />
-          ))}
-        </ol>
-      </section>
+        <TrendingAlbums albums={trendingAlbums} />
+      </RevealSection>
 
-      <section className='border-b border-border px-6 md:px-12 py-14'>
+      <MarqueeStrip
+        items={['NEW REVIEWS', 'NEW LISTS', 'NEW LISTENERS', 'NEW SOUNDS', 'NEW STORIES', 'NEW SCORES']}
+        variant='sans'
+        direction='right'
+      />
+
+      <RevealSection>
         <SectionHeading label='ARTISTS WORTH KNOWING' />
         <ArtistRail artists={featuredArtists} />
-      </section>
+      </RevealSection>
 
-      <section className='border-b border-border px-6 md:px-12 py-14'>
+      <RevealSection>
         <SectionHeading label='SONGS RIGHT NOW' />
         <TopTracks />
-      </section>
+      </RevealSection>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-0 border-b border-border'>
-        <section className='px-6 md:px-12 py-14 lg:border-r lg:border-border'>
+        <RevealSection className='lg:border-r lg:border-border' border={false}>
           <SectionHeading label='CURATED LISTS' href='/lists' />
           <div>
             {featuredLists.map((list) => {
@@ -101,9 +90,9 @@ export default async function HomePage() {
               return <ListPreview key={list.id} list={list} author={author} />
             })}
           </div>
-        </section>
+        </RevealSection>
 
-        <section className='px-6 md:px-12 py-14'>
+        <RevealSection border={false}>
           <SectionHeading label='LISTENERS TO FOLLOW' />
           <div>
             {peopleToFollow.map((u) => (
@@ -115,19 +104,15 @@ export default async function HomePage() {
               />
             ))}
           </div>
-        </section>
+        </RevealSection>
       </div>
 
-      <section className='px-6 md:px-12 py-14'>
+      <RevealSection border={false}>
         <SectionHeading label='RECENT ACTIVITY' />
         <HomeFeed />
-      </section>
+      </RevealSection>
 
-      <footer className='border-t border-border px-6 md:px-12 py-8'>
-        <p className='font-sans text-[0.65rem] tracking-[0.3em] uppercase text-cream-dim'>
-          MELOS  ·  RATINGS  ·  REVIEWS  ·  LISTS  ·  DISCOVERY
-        </p>
-      </footer>
+      <Footer />
     </div>
   )
 }
